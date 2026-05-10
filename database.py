@@ -194,3 +194,25 @@ def get_budget_categories():
     categories = cursor.fetchall()
     conn.close()
     return [c[0] for c in categories]
+
+
+def delete_category_from_db(category_name):
+    """
+    Удаление категории из базы данных
+    """
+    conn = sqlite3.connect('finance.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM budgets WHERE category = ?", (category_name,))
+    conn.commit()
+    conn.close()
+
+
+def get_budgets_dataframe():
+    """
+    Таблица для бюджетов и их остатков
+    """
+    conn = sqlite3.connect('finance.db')
+    query = "SELECT category, period, budget_limit FROM budgets"
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+    return df

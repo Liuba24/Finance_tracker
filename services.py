@@ -1,6 +1,14 @@
 from database import add_transaction, set_budget, get_remaining_budget, delete_transaction
 from models import Transaction, Budget
+from database import delete_category_from_db
 
+def process_delete_category(category_name: str) -> tuple[bool, str]:
+    try:
+        delete_category_from_db(category_name)
+        return True, f"Категория '{category_name}' и связанный с ней бюджет успешно удалены."
+    except Exception as e:
+        return False, f"Ошибка при удалении: {str(e)}"
+    
 
 def process_new_transaction(tr: Transaction) -> tuple[bool, str]:
     """
