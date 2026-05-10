@@ -183,3 +183,14 @@ def get_expenses_dataframe() -> pd.DataFrame:
     finally:
         if connection:
             connection.close()
+
+def get_budget_categories():
+    """
+    Список категорий с установленным бюджетом
+    """
+    conn = sqlite3.connect('finance.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT category FROM budgets")
+    categories = cursor.fetchall()
+    conn.close()
+    return [c[0] for c in categories]

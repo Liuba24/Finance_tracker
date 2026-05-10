@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from datetime import date
-from database import get_expenses_dataframe, init_db, get_all_transactions
+from database import get_expenses_dataframe, init_db, get_all_transactions, get_budget_categories
 from services import process_new_transaction, process_new_budget, process_delete_transaction
 from models import Transaction, Budget
 
@@ -42,26 +42,32 @@ with tab_set_budget:
 
 with tab_add:
     st.title("Добавление транзакции")
-    st.write("Заполните форму")
 
-    with st.form("add_transaction_form", clear_on_submit=True):
-        tran = Transaction(
-            category=st.text_input("Категория"),
-            amount=st.number_input("Сумма операции", min_value=0.0),
-            date=st.date_input("Дата", value=date.today()),
-            type=st.selectbox("Тип операции", ["Расход", "Доход"])
-        )
-        submit = st.form_submit_button("Добавить транзакцию")
-        
-    if submit:
-        success, message = process_new_transaction(tran)
-        if success:
-            if "Осторожно" in message:
-                st.warning(message)
+    budget_categories = get_budget_categories()
+ 
+    if not budget_categories:
+        st.warning("Нет доступных категорий. Пожалуйста, сначала установите бюджет хотя бы на одну категорию во вкладке 'Установка бюджета'.")
+    else:
+        st.write("Заполните форму")
+
+        with st.form("add_transaction_form", clear_on_submit=True):
+            tran = Transaction(
+                category=st.selectbox("Категория", options=budget_categories),
+                amount=st.number_input("Сумма операции", min_value=0.0),
+                date=st.date_input("Дата", value=date.today()),
+                type=st.selectbox("Тип операции", ["Расход", "Доход"])
+            )
+            submit = st.form_submit_button("Добавить транзакцию")
+            
+        if submit:
+            success, message = process_new_transaction(tran)
+            if success:
+                if "Осторожно" in message:
+                    st.warning(message)
+                else:
+                    st.success(message)
             else:
-                st.success(message)
-        else:
-            st.error(message)
+                st.error(message)
 
 with tab_history:
     st.title("История транзакций")
