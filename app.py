@@ -8,7 +8,7 @@ from models import Transaction, Budget
 
 init_db()
 
-tab_set_budget, tab_add, tab_history, tab_analytics = st.tabs(["Установка бюджета", "История транзакций", "Удаление", "Аналитика"])
+tab_set_budget, tab_add, tab_history, tab_analytics = st.tabs(["Установка бюджета", "Добавление транзакции", "История транзакций", "Аналитика"])
 
 with tab_set_budget:
     st.title("Установите бюджет")
