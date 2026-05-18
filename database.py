@@ -5,7 +5,7 @@ from models import Transaction, Budget
 
 def init_db() -> None:
     """
-    Инициализирует базу данных и создает необходимые таблицы, 
+    Инициализирует базу данных и создает таблицы транзакций и бюджета,
     если они не существуют
     """
     connection = None
@@ -83,7 +83,7 @@ def delete_transaction(tr_id: int) -> None:
 
 def set_budget(budget: Budget) -> None:
     """
-    Устанавливает бюджет для категории
+    Устанавливает бюджет по категории
     """
     connection = None
     try:
